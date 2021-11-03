@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+    body {
+  background: linear-gradient(90deg, rgba(120, 29, 63, .2), rgba(20, 29, 63, .1));
+
+  font-family: Algerian, Georgia;
+  color: rgba(22, 29, 63, 1);
+  margin-left: 10%;
+  margin-right: 10%;
+  font-size: 110%;
+  background-repeat: repeat;
+  background-size: 100% 100%;
+}
+
+html {
+    height: 100%
+}
+h1 {
+  margin-top: 5%;
+  color: #161D3F;
+  font-size: 250%;
+}
+p {
+}
+
+ol {
+}
+
+textarea {
+  font-family: Algerian, Georgia;
+  font-size: 110%;
+  margin-left: -2%;
+  width: 99%;
+  height: 300px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid rgba(22, 29, 63, .25);
+  border-radius: 4px;
+  background-color: rgba(248, 248, 248, .5);
+  resize: both;
+}
+
+label {
+  padding: 5px 0px 0px 0;
+  display: inline-block;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+  background-color: #161D3F;
+  border: none;
+  color: white;
+  font-family: Algerian, Georgia;
+  font-size: 110%;
+  border-radius: 4px;
+  padding: 22px 36px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#formsubmit{ opacity: 0.9; }
+#formsubmit:hover, #formsubmit:active { opacity: 1; }
+
+</style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Catch anachronisms</title>
+</head>
+<body>
+<h1>Check your text for anachronisms</h1>
+<form id="input_form" action="/result" method="post">
+    <textarea name="text" ></textarea><br>
+    <p>Please select your chosen era:</p>
+    <input type="radio" id="year1" name="year" value="1812" checked="checked">
+    <label for="year1">1812</label><br>
+    <input type="radio" id="year2" name="year" value="1851">
+    <label  for="year2">1851</label><br>
+    <input type="radio" id="year4" name="year" value="1966">
+    <label  for="year4">1966</label><br><br>
+    <input id="formsubmit" type="submit" value="Analyze" />
+</form>
+<p>Words that are probably anachronistic:</p>
+<script>$("#input_form").submit(function(e) {
+
+    e.preventDefault();
+
+    var form = $(this);
+    var url = form.attr('action');
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: form.serialize(),
+           success: function(data)
+           {
+           $("#result_area .word_list").empty();
+           data.words.forEach(function(item){
+            $("#result_area .word_list").append('<li>'+item+'</li>');
+            });
+            },
+    error: function(data){
+       var json = $.parseJSON(data);
+       alert(json.error);
+    }
+         });
+});</script>
+<div  id="result_area">
+    <ol class="word_list">
+    </ol>
+</div>
+<br>
+<p >NB: I don't save a copy of your text. If you'd like me to add an era for comparison, please email me at jessica.dickinson.goodman@gmail.com.</p>
+<br>
+
+</body>
+</html>
